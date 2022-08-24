@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 import axios from "axios"
 
-const Home = () =>  {
+const Home = ({results}) =>  {
 
-  const [pokemon, setPokemon] = useState([])
+  // const [pokemon, setPokemon] = useState([])
 
-  useEffect(() => {
-    axios.get("https://pokeapi.co/api/v2/pokemon").then(({ data }) => setPokemon(data?.results));
-  }, []);
-
-  console.log("fasfas", pokemon)
+  // useEffect(() => {
+  //   axios.get("https://pokeapi.co/api/v2/pokemon").then(({ data }) => setPokemon(data?.results));
+  // }, []);
 
   return (
     <div className={styles.container}>
@@ -28,7 +26,7 @@ const Home = () =>  {
         <p className={styles.description}>See pokemon list below</p>
 
         <div className={styles.grid}>
-        {pokemon.map(pokemon => <a href="https://nextjs.org/docs" className={styles.card}>
+        {results.map(pokemon => <a href="https://nextjs.org/docs" className={styles.card}>
           <h3 style={{color:"white"}}>{pokemon.name}</h3>
           </a>)}
         </div>
@@ -51,3 +49,14 @@ const Home = () =>  {
 }
 
 export default Home
+
+export async function getServerSideProps(context){
+
+  const {data} = await axios.get("https://pokeapi.co/api/v2/pokemon")
+
+  return{
+    props:{
+      results: data?.results
+    }
+  }
+}
